@@ -117,7 +117,7 @@ public class UltimateJoystickEditor : Editor
 			// Else, shift to the next parent.
 			parent = parent.transform.parent;
 		}
-		if( parent == null && PrefabUtility.GetPrefabType( Selection.activeGameObject ) != PrefabType.Prefab )
+		if( parent == null && !PrefabUtility.IsPartOfPrefabAsset(Selection.activeGameObject) )
 			UltimateJoystickCreator.RequestCanvas( Selection.activeGameObject );
 
 		return null;
@@ -152,7 +152,7 @@ public class UltimateJoystickEditor : Editor
 			return false;
 
 		// If the selection is actually the prefab within the Project window, then return no errors.
-		if( PrefabUtility.GetPrefabType( Selection.activeGameObject ) == PrefabType.Prefab )
+		if( PrefabUtility.IsPartOfPrefabAsset(Selection.activeGameObject) )
 			return false;
 
 		// If parentCanvas is unassigned, then get a new canvas and return no errors.
@@ -715,7 +715,7 @@ public class UltimateJoystickEditor : Editor
 			if( GUILayout.Button( "Open Documentation" ) )
 				UltimateJoystickWindow.OpenDocumentation();
 
-			if( PrefabUtility.GetPrefabType( Selection.activeGameObject ) != PrefabType.Prefab && Application.isPlaying )
+			if( !PrefabUtility.IsPartOfPrefabAsset(Selection.activeGameObject) && Application.isPlaying )
 			{
 				EditorGUILayout.BeginVertical( "Box" );
 				EditorGUILayout.LabelField( "Current Position:", EditorStyles.boldLabel );
@@ -730,7 +730,7 @@ public class UltimateJoystickEditor : Editor
 		
 		EditorGUILayout.Space();
 
-		if( PrefabUtility.GetPrefabType( Selection.activeGameObject ) == PrefabType.Prefab )
+		if( PrefabUtility.IsPartOfPrefabAsset(Selection.activeGameObject) )
 		{
 			GUISkin defaultSkin = GUI.skin;
 			int defaultFontSize = defaultSkin.FindStyle( "Button" ).fontSize;

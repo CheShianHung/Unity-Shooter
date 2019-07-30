@@ -16,8 +16,7 @@ public class BulletMovement : MonoBehaviour
         height = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).y + moveEdgeMargin;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Update()
     {
         transform.position += angle * speed;
         if (transform.position.x > width || transform.position.x < -width ||
@@ -25,9 +24,9 @@ public class BulletMovement : MonoBehaviour
             Destroy(gameObject);
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+    void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.transform.tag == "Enemy")
+        if (col.gameObject.tag == "Enemy")
             Destroy(gameObject);
     }
 }

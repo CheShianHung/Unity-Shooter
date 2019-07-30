@@ -5,12 +5,11 @@ using UnityEngine;
 public class Enemy_Triangle : Enemy
 {
     public Transform target;
-	public float health;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        health = 30;
     }
 
     // Update is called once per frame
@@ -23,10 +22,12 @@ public class Enemy_Triangle : Enemy
 		base.Update();
     }
 
-    void OnCollisionEnter2D(Collision2D col)
+	void OnTriggerEnter2D(Collider2D col)
     {
-		if (col.transform.tag == "PlayerAttack") {
+		if (col.gameObject.tag == "PlayerAttack" && startBlinking == false) {
+			this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;
 			startBlinking = true;
+            health -= 10;
 		}
     }
 }

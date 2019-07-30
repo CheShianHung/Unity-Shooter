@@ -2,39 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Blinkable
 {
-	public float blinkingTimer = 0.0f;
-	public float blinkingDuration = 0.1f;
-	public bool startBlinking = false;
+    public float health = 1.0f;
 
-    // Start is called before the first frame update
-    void Start()
+    public override void Update()
     {
-        
+        if (health <= 0 && startBlinking == false)
+            Destroy(gameObject);
+		base.Update();
     }
-
-    // Update is called once per frame
-    public virtual void Update()
-    {
-		if(startBlinking == true)
-		{ 
-			StartBlinking();
-		}
-    }
-
-	private void StartBlinking()
-	{
-		blinkingTimer += Time.deltaTime;
-		if(blinkingTimer >= blinkingDuration)
-		{
-			blinkingTimer = 0.0f;
-			if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
-				this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;  //make changes
-			} else {
-				this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;   //make changes
-				startBlinking = false;
-			}
-		}
-	}
 }

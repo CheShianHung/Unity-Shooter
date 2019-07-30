@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShooterMovement : MonoBehaviour
+public class ShooterMovement : Blinkable
 {
     public GameObject bullet;
+    public GameObject healthSprite;
+    public float initialHealth = 3.0f;
     public float moveSpeed = 0.05f;
     public float rotateSpeed = 0.2f;
     public float shootSpeed = 0.5f;
@@ -15,23 +17,32 @@ public class ShooterMovement : MonoBehaviour
     private UltimateJoystick movementJoystick;
     private float width;
     private float height;
-    private float targetRotation;
     private float z;
+    private ArrayList healthObjects;
 
 	private void Start()
 	{
+		blinkTime = 2;
+
         width = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).x - moveEdgeMargin;
         height = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).y - moveEdgeMargin;
-        targetRotation = 0.0f;
         z = transform.position.z;
         movementJoystick = UltimateJoystick.GetUltimateJoystick("Movement");
         shootJoystick = UltimateJoystick.GetUltimateJoystick("Shoot");
+        healthObjects = new ArrayList();
+        for (int i = 0; i < initialHealth; i++)
+        {
+            GameObject obj = Instantiate(healthSprite);
+            healthObjects.Add(obj);
+            obj.transform.position = new Vector3(obj.transform.position.x + i * 0.8f, obj.transform.position.y, -1);
+        }
     }
 
-	void Update()
+	public override void Update()
     {
         Movement(movementJoystick);
         Shoot(shootJoystick);
+		base.Update();
     }
 
     private void Movement(UltimateJoystick joystick) 
@@ -71,4 +82,14 @@ public class ShooterMovement : MonoBehaviour
             }
         }
     }
+
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		if (col.gameObject.tag == "Enemy") {
+			startBlinking = true;
+			GameObject obj = (GameObject)healthObjects[healthObjects.Count - 1];
+			Destroy(obj);
+			healthObjects.Remove(obj);
+		}
+	}
 }

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4000935916570178254}
   - component: {fileID: 761803414}
   - component: {fileID: -5155997748091728147}
-  - component: {fileID: 2554176753487639064}
   m_Layer: 0
   m_Name: Enemy_Triangle
   m_TagString: Enemy
@@ -95,6 +94,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3571f1457f8a040c084f132aa0501929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blinkingTimer: 0
+  blinkingDuration: 0.1
+  startBlinking: 0
+  blinkTime: 1
+  health: 1
   target: {fileID: 0}
 --- !u!68 &761803414
 EdgeCollider2D:
@@ -106,7 +110,7 @@ EdgeCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -137,18 +141,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!111 &2554176753487639064
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4000935916570178243}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
