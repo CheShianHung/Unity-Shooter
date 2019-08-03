@@ -9,7 +9,7 @@ public class Blinkable : MonoBehaviour
 	public bool startBlinking = false;
 	public int blinkTime = 1;
 
-	private int blinkCount = 0;
+	public int blinkCount = 0;
 
 	public virtual void Update()
 	{
@@ -19,7 +19,7 @@ public class Blinkable : MonoBehaviour
 		}
 	}
 
-	private void StartBlinking()
+	public virtual void StartBlinking()
 	{
 		blinkingTimer += Time.deltaTime;
 		if(blinkingTimer >= blinkingDuration)

@@ -98,10 +98,12 @@ MonoBehaviour:
   blinkingDuration: 0.1
   startBlinking: 0
   blinkTime: 1
+  blinkCount: 0
   rb: {fileID: 0}
   target: {fileID: 0}
   health: 1
   speed: 0.8
+  stopDistance: 0.5
 --- !u!68 &761803414
 EdgeCollider2D:
   m_ObjectHideFlags: 0

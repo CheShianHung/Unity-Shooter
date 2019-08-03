@@ -99,6 +99,7 @@ MonoBehaviour:
   blinkingDuration: 0.1
   startBlinking: 0
   blinkTime: 1
+  blinkCount: 0
   bullet: {fileID: 3751274515262786033, guid: 84af0028c14244fd6b20594ee359b5fa, type: 3}
   healthSprite: {fileID: 6499758340615069052, guid: 0287b87b33a4a4886aa2e8b60a8e1f7f,
     type: 3}
@@ -108,6 +109,7 @@ MonoBehaviour:
   shootSpeed: 0.5
   lastShootTime: 0
   moveEdgeMargin: 0.5
+  afterBlinkDuration: 1
 --- !u!50 &8882546971993864980
 Rigidbody2D:
   serializedVersion: 4

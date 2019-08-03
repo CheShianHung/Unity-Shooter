@@ -12,6 +12,7 @@ public class ShooterMovement : Blinkable
     public float shootSpeed = 0.5f;
     public float lastShootTime = 0.0f;
     public float moveEdgeMargin = 0.5f;
+	public float afterBlinkDuration = 1f;
 
 	private Rigidbody2D rb;
     private UltimateJoystick shootJoystick;
@@ -19,6 +20,8 @@ public class ShooterMovement : Blinkable
     private float width;
     private float height;
     private float z;
+	private int overlapCounter;
+	private bool afterBlink;
     private ArrayList healthObjects;
 
 	private void Awake()
@@ -32,6 +35,8 @@ public class ShooterMovement : Blinkable
         width = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).x - moveEdgeMargin;
         height = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).y - moveEdgeMargin;
         z = transform.position.z;
+		overlapCounter = 0;
+		afterBlink = false;
         movementJoystick = UltimateJoystick.GetUltimateJoystick("Movement");
         shootJoystick = UltimateJoystick.GetUltimateJoystick("Shoot");
         healthObjects = new ArrayList();
@@ -47,7 +52,22 @@ public class ShooterMovement : Blinkable
     {
         Movement(movementJoystick);
         Shoot(shootJoystick);
-		base.Update();
+
+		if (afterBlink) {
+			blinkingTimer += Time.deltaTime;
+			if(blinkingTimer >= afterBlinkDuration) {
+				blinkingTimer = 0f;
+				afterBlink = false;
+				if (overlapCounter != 0) {
+					startBlinking = true;
+					getHit();
+				}
+			}
+		}
+		else if (startBlinking == true)
+		{
+			StartBlinking();
+		}
     }
 
     private void Movement(UltimateJoystick joystick) 
@@ -88,17 +108,52 @@ public class ShooterMovement : Blinkable
         }
     }
 
+	public override void StartBlinking()
+	{
+		blinkingTimer += Time.deltaTime;
+		if(blinkingTimer >= blinkingDuration)
+		{
+			blinkingTimer = 0.0f;
+			if (this.gameObject.GetComponent<SpriteRenderer> ().enabled == true) {
+
+				this.gameObject.GetComponent<SpriteRenderer> ().enabled = false;
+			} else {
+				this.gameObject.GetComponent<SpriteRenderer> ().enabled = true;
+				blinkCount++;
+				if (blinkCount >= blinkTime) {
+					blinkCount = 0;
+					blinkingTimer = 0.0f;
+					afterBlink = true;
+					startBlinking = false;
+				}
+			}
+		}
+	}
+
 	void OnTriggerEnter2D(Collider2D col)
 	{
 		if (col.gameObject.tag == "Enemy") {
+			overlapCounter++;
 			startBlinking = true;
-			GameObject obj = (GameObject)healthObjects[healthObjects.Count - 1];
-			Destroy(obj);
-			healthObjects.Remove(obj);
-			if (healthObjects.Count == 0) {
-				Destroy(gameObject);
-				print("GameOver");
-			}
+			getHit();
+		}
+	}
+
+	void OnTriggerExit2D(Collider2D col)
+	{
+		if (col.gameObject.tag == "Enemy") {
+			overlapCounter--;
+		}
+	}
+
+	void getHit()
+	{
+		GameObject obj = (GameObject)healthObjects[healthObjects.Count - 1];
+		Destroy(obj);
+		healthObjects.Remove(obj);
+		if (healthObjects.Count == 0) {
+			Destroy(gameObject);
+			print("GameOver");
 		}
 	}
 }

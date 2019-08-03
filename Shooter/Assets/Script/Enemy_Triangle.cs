@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy_Triangle : Enemy
 {
+	public float stopDistance = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +15,10 @@ public class Enemy_Triangle : Enemy
     // Update is called once per frame
     public override void Update()
     {
-		if (target != null) {
+		float distance = -1;
+		if (target != null)
+			distance = Vector3.Distance(transform.position, target.transform.position);
+		if (distance != -1 && distance >= stopDistance) {
 	        Vector3 diff = (target.transform.position - transform.position).normalized;
 	        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
 			rb.MoveRotation(Quaternion.Euler(0f, 0f, rot_z - 90));
