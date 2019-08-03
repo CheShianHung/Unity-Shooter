@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class BulletMovement : MonoBehaviour
 {
+	public Rigidbody2D rb;
+	public Vector2 angle;
     public float speed;
-    public Vector3 angle;
+
     private float width;
     private float height;
     private float moveEdgeMargin = 1f;
 
+	private void Awake()
+	{
+		rb = GetComponent<Rigidbody2D>();
+	}
     private void Start()
     {
         width = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0)).x + moveEdgeMargin;
@@ -18,7 +24,7 @@ public class BulletMovement : MonoBehaviour
 
     public void Update()
     {
-        transform.position += angle * speed;
+		rb.MovePosition(new Vector2(transform.position.x, transform.position.y) + angle * speed);
         if (transform.position.x > width || transform.position.x < -width ||
             transform.position.y > height || transform.position.y < -height)
             Destroy(gameObject);

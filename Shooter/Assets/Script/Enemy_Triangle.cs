@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class Enemy_Triangle : Enemy
 {
-    public Transform target;
-
     // Start is called before the first frame update
     void Start()
     {
         health = 30;
+		speed = 0.8f;
     }
 
     // Update is called once per frame
     public override void Update()
     {
-        Vector3 diff = (target.position - transform.position).normalized;
-        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
-
+		if (target != null) {
+	        Vector3 diff = (target.transform.position - transform.position).normalized;
+	        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+			rb.MoveRotation(Quaternion.Euler(0f, 0f, rot_z - 90));
+			rb.velocity = new Vector2(transform.up.x, transform.up.y) * speed;
+		}
+		else
+			rb.velocity = Vector2.zero;
 		base.Update();
     }
 

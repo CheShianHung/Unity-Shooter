@@ -11,11 +11,6 @@ public class Blinkable : MonoBehaviour
 
 	private int blinkCount = 0;
 
-	void Start()
-	{
-
-	}
-
 	public virtual void Update()
 	{
 		if (startBlinking == true)

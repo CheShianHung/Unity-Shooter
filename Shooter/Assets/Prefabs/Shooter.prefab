@@ -103,8 +103,8 @@ MonoBehaviour:
   healthSprite: {fileID: 6499758340615069052, guid: 0287b87b33a4a4886aa2e8b60a8e1f7f,
     type: 3}
   initialHealth: 3
-  moveSpeed: 0.05
-  rotateSpeed: 0.2
+  moveSpeed: 0.06
+  rotateSpeed: 0.5
   shootSpeed: 0.5
   lastShootTime: 0
   moveEdgeMargin: 0.5

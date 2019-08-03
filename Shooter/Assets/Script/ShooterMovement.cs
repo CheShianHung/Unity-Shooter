@@ -7,12 +7,13 @@ public class ShooterMovement : Blinkable
     public GameObject bullet;
     public GameObject healthSprite;
     public float initialHealth = 3.0f;
-    public float moveSpeed = 0.05f;
-    public float rotateSpeed = 0.2f;
+    public float moveSpeed = 0.06f;
+    public float rotateSpeed = 0.5f;
     public float shootSpeed = 0.5f;
     public float lastShootTime = 0.0f;
     public float moveEdgeMargin = 0.5f;
 
+	private Rigidbody2D rb;
     private UltimateJoystick shootJoystick;
     private UltimateJoystick movementJoystick;
     private float width;
@@ -20,6 +21,10 @@ public class ShooterMovement : Blinkable
     private float z;
     private ArrayList healthObjects;
 
+	private void Awake()
+	{
+		rb = GetComponent<Rigidbody2D>();
+	}
 	private void Start()
 	{
 		blinkTime = 2;
@@ -47,16 +52,16 @@ public class ShooterMovement : Blinkable
 
     private void Movement(UltimateJoystick joystick) 
     {
-        Vector3 moveDirection = new Vector3(joystick.GetHorizontalAxis(), joystick.GetVerticalAxis(), 0);
-        transform.position += moveDirection * moveSpeed;
-        if (transform.position.x > width)
-            transform.position = new Vector3(width, transform.position.y, z);
-        if (transform.position.x < -width)
-            transform.position = new Vector3(-width, transform.position.y, z);
-        if (transform.position.y > height)
-            transform.position = new Vector3(transform.position.x, height, z);
-        if (transform.position.y < -height)
-            transform.position = new Vector3(transform.position.x, -height, z);
+		Vector2 movePosition = new Vector2(transform.position.x, transform.position.y) + new Vector2(joystick.GetHorizontalAxis(), joystick.GetVerticalAxis()) * moveSpeed;
+        if (movePosition.x > width)
+			movePosition.x = width;
+		if (movePosition.x < -width)
+			movePosition.x = -width;
+		if (movePosition.y > height)
+			movePosition.y = height;
+		if (movePosition.y < -height)
+			movePosition.y = -height;
+		rb.MovePosition(movePosition);
     }
 
     private void Shoot(UltimateJoystick joystick)
@@ -66,7 +71,7 @@ public class ShooterMovement : Blinkable
         if (x != 0.0f || y != 0.0f)
         { 
             float angle = angle = Mathf.Atan2(y, x) * Mathf.Rad2Deg - 90;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, angle), moveSpeed * Time.time);
+			rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, angle), moveSpeed * Time.time));
 
             lastShootTime += Time.deltaTime;
             if (lastShootTime > shootSpeed)
@@ -74,9 +79,9 @@ public class ShooterMovement : Blinkable
                 lastShootTime = 0;
                 float tan = Mathf.Tan((transform.rotation.eulerAngles.z + 90) * Mathf.PI / 180f);
                 if (transform.rotation.eulerAngles.z < 180)
-                    bullet.GetComponent<BulletMovement>().angle = new Vector3(-1, -tan, 0).normalized;
+                    bullet.GetComponent<BulletMovement>().angle = new Vector2(-1, -tan).normalized;
                 else
-                    bullet.GetComponent<BulletMovement>().angle = new Vector3(1, tan, 0).normalized;
+                    bullet.GetComponent<BulletMovement>().angle = new Vector2(1, tan).normalized;
                 bullet.transform.position = transform.Find("ShootPoint").transform.position;
                 Instantiate(bullet);
             }
@@ -90,6 +95,10 @@ public class ShooterMovement : Blinkable
 			GameObject obj = (GameObject)healthObjects[healthObjects.Count - 1];
 			Destroy(obj);
 			healthObjects.Remove(obj);
+			if (healthObjects.Count == 0) {
+				Destroy(gameObject);
+				print("GameOver");
+			}
 		}
 	}
 }
